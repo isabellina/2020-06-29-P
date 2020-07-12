@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import it.polito.tdp.PremierLeague.model.Model;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -39,7 +41,7 @@ public class FXMLController {
     private TextField txtMinuti; // Value injected by FXMLLoader
 
     @FXML // fx:id="cmbMese"
-    private ComboBox<?> cmbMese; // Value injected by FXMLLoader
+    private ComboBox<String> cmbMese; // Value injected by FXMLLoader
 
     @FXML // fx:id="cmbM1"
     private ComboBox<?> cmbM1; // Value injected by FXMLLoader
@@ -57,6 +59,18 @@ public class FXMLController {
 
     @FXML
     void doCreaGrafo(ActionEvent event) {
+    	try {
+    		int m = Integer.parseInt(txtMinuti.getText());
+    		if(this.model.esistonoMAtch()==false) {
+    			txtResult.appendText("Non esistono match in quel mese ti conviene scegliere un altro mese");
+    		}
+    		else {
+    		this.model.creaGrafo(cmbMese.getValue());
+    		}
+    	}
+    	catch(NumberFormatException n) {
+    		txtResult.appendText("Devi inserire un numero intero");
+    	}
     	
     }
 
@@ -79,6 +93,10 @@ public class FXMLController {
     
     public void setModel(Model model) {
     	this.model = model;
+    	ObservableList<String> monat = FXCollections.observableList((List<String>) this.model.getMesi().values());
+    	cmbMese.setItems(monat);
+    	cmbMese.setValue(monat.get(0));
+    	
   
     }
     
