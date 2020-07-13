@@ -94,10 +94,10 @@ public class PremierLeagueDAO {
 	}
 	
 	public List<Match> getMatchMese(int a){
-		String sql = "Select m.MatchID, m.TeamHomeID, m.TeamAwayID, m.teamHomeFormation, "
-				+ "m.teamAwayFormation, m.resultOfTeamHome, m.date, t1.Name, t2.Name " + 
-				"from Matches as m " + 
-				"where month(m.`Date`) = ? " ;
+		String sql = "Select m.MatchID, m.TeamHomeID, m.TeamAwayID, m.teamHomeFormation, " + 
+				"				m.teamAwayFormation, m.resultOfTeamHome, m.date, t1.Name, t2.Name " + 
+				"				from Matches as m , Teams as t1, Teams as t2  " + 
+				"				where month(m.`Date`) = ? and t1.`TeamID`=m.`TeamHomeID` and t2.`TeamID`=m.`TeamAwayID` " ;
 		
 		List<Match> result = new ArrayList<Match>();
 		Connection conn = DBConnect.getConnection();
@@ -142,7 +142,7 @@ public class PremierLeagueDAO {
 			ResultSet res = st.executeQuery();
 			while (res.next()) {
 
-				Arco a = new Arco (mappa.get(res.getInt("m1")),mappa.get(res.getInt("m1")),res.getInt("cnt"));
+				Arco a = new Arco (mappa.get(res.getInt("m1")),mappa.get(res.getInt("m2")),res.getInt("cnt"));
 				
 				
 				

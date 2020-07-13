@@ -30,51 +30,74 @@ public class Model {
 	}
 	
     public Map<Integer,String> getMesi(){
-    	mesi.put(1, "Gennaio");
-    	mesi.put(2, "Febbraio");
-    	mesi.put(3, "Marzo");
-    	mesi.put(4, "Aprile");
-    	mesi.put(5, "Maggio");
-    	mesi.put(6, "Giugno");
-    	mesi.put(7, "Luglio");
-    	mesi.put(8, "Agosto");
-    	mesi.put(9, "Settembre");
-    	mesi.put(10, "Ottobre");
-    	mesi.put(11, "Novembre");
-    	mesi.put(12, "Dicembre");
+    	this.mesi.put(1, "Gennaio");
+    	this.mesi.put(2, "Febbraio");
+    	this.mesi.put(3, "Marzo");
+    	this.mesi.put(4, "Aprile");
+    	this.mesi.put(5, "Maggio");
+    	this.mesi.put(6, "Giugno");
+    	this.mesi.put(7, "Luglio");
+    	this.mesi.put(8, "Agosto");
+    	this.mesi.put(9, "Settembre");
+    	this.mesi.put(10, "Ottobre");
+    	this.mesi.put(11, "Novembre");
+    	this.mesi.put(12, "Dicembre");
+    	
+    	//System.out.println(this.mesi.size() + "ciao " );
     	
     	return mesi;
     }
     
-    public void creaGrafo(String s) {
+    public List<String> getListMonth(){
+    	List<String> ltemp = new LinkedList<String>(this.mesi.values());
     	
-    		for(String str : this.mesi.values()) {
-    			if(str.compareTo(s)==0) {
-    				mese = str.indexOf(s);
-    			}
-    		}
+    	return ltemp;
+    }
+    
+    public void creaGrafo() {
     	
-    	mese = mese+1;
+    		
+    	
+    //	System.out.println("Questo è il mese che ho selezionato "+ mese) ;
     	this.grafo = new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
     	this.dao.listAllMatches(allMatch);
     	if(this.dao.getMatchMese(mese).size()!=0) {
     		Graphs.addAllVertices(this.grafo, this.dao.getMatchMese(mese));
     		for(Arco a : this.dao.getArchi(allMatch)) {
     			if(this.grafo.containsVertex(a.getM1()) && this.grafo.containsVertex(a.getM2())) {
+    				System.out.println("a "+  a.getM1() +" e "+  a.getM2());
+    				if(a.getM1()!=a.getM2()) {
     				DefaultWeightedEdge e = this.grafo.getEdge(a.getM1(),a.getM2() );
     				if(e==null) {
     				Graphs.addEdge(this.grafo, a.getM1(), a.getM2(), a.getPeso());
+    					}
     				}
     			}
     		}
     		
     	}
-    	System.out.println(this.grafo);
+    	//System.out.println(this.grafo);
     	
     	
     }
     
-    public boolean esistonoMAtch() {
+    
+    public int nVertici() {
+		return this.grafo.vertexSet().size();
+	}
+	
+	
+	public int nArchi() {
+		return this.grafo.edgeSet().size();
+	}
+    
+    public boolean esistonoMAtch(String s) {
+    	for(int i : this.mesi.keySet()) {
+    		if(this.mesi.get(i).compareTo(s)==0) {
+    			mese = i;
+    		}
+    	}
+    	System.out.println(mese);
     	if(this.dao.getMatchMese(mese).size()==0) {
     		return false;
     	}
@@ -88,13 +111,31 @@ public class Model {
     	for(DefaultWeightedEdge d : this.grafo.edgeSet()) {
     		if(this.grafo.getEdgeWeight(d)>max) {
     			max =(int) this.grafo.getEdgeWeight(d) ;
-    			Match a = this.grafo.getEdgeSource(d);
-    			Match b = this.grafo.getEdgeTarget(d);
-    			int p = (int) this.grafo.getEdgeWeight(d);
-    			lMax.add(new Arco (a,b,p));
+    			
+    			
     		}
     	}
-    	return lMax;
+    	
+    	for(DefaultWeightedEdge d : this.grafo.edgeSet()) {
+    		System.out.println("ciao " +d.toString());
+    		if(this.grafo.getEdgeWeight(d)==max) {
+    			Match m1 = this.grafo.getEdgeSource(d);
+    		    Match m2 = this.grafo.getEdgeTarget(d);
+    		    lMax.add(new Arco(m1,m2,(int) this.grafo.getEdgeWeight(d)));
+    		    
+    		   
+    		}
+    	}
+    	//System.out.println(max);
+    	
+    	
+    	
+        for(Arco a : lMax) {
+    	System.out.println("C" + a.toString()+ "\n");
+        }
+    	return lMax; 
+    	
+    	
     	
     }
 	

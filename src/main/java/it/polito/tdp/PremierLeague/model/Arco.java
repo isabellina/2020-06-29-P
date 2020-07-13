@@ -43,6 +43,13 @@ public class Arco {
 	public void setPeso(int peso) {
 		this.peso = peso;
 	}
+
+
+	@Override
+	public String toString() {
+		return m1.matchID+ " " +  m1.teamHomeNAME + " " +  m1.teamAwayNAME + " " +
+				m2.matchID+ " " +  m2.teamHomeNAME + " "+  m2.teamAwayNAME + " " + peso + "\n" ;
+	}
 	
 	
 	
